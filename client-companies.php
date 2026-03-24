@@ -72,6 +72,7 @@ foreach ($companies as $c) {
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
+            align-items: stretch;
         }
         
         .company-card {
@@ -81,6 +82,9 @@ foreach ($companies as $c) {
             padding: 25px;
             transition: all 0.3s ease;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
         }
         
         .company-card:hover {
@@ -107,6 +111,12 @@ foreach ($companies as $c) {
             font-weight: 700;
             color: #fff;
             margin-bottom: 5px;
+            line-height: 1.35;
+            min-height: calc(1.35em * 2);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         
         .company-industry {
@@ -122,6 +132,7 @@ foreach ($companies as $c) {
             margin-bottom: 15px;
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 112px;
         }
         
         .info-item {
@@ -141,6 +152,7 @@ foreach ($companies as $c) {
             display: flex;
             justify-content: center;
             gap: 10px;
+            margin-top: auto;
         }
         
         .stat {
@@ -210,6 +222,7 @@ foreach ($companies as $c) {
             display: block;
             width: 100%;
             margin-top: 15px;
+            flex-shrink: 0;
         }
         
         .view-more-btn:hover {
@@ -220,6 +233,10 @@ foreach ($companies as $c) {
         @media (max-width: 768px) {
             .companies-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .company-info {
+                min-height: auto;
             }
             
             .search-container {

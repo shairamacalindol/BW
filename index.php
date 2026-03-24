@@ -690,7 +690,7 @@ if ($stats['total_delivered'] > 0 && $months_with_data > 0) {
                 </div>
                 <div class="metric-info">
                     <span class="metric-label">Sales Amount</span>
-                    <span class="metric-value metric-value-money">PHP <?php echo number_format($stats['total_sales_amount'], 2); ?></span>
+                    <span class="metric-value metric-value-money"><span class="money-currency">PHP</span> <span class="money-amount"><?php echo number_format($stats['total_sales_amount'], 2); ?></span></span>
                     <div class="metric-trend up">
                         <i class="fas fa-arrow-up"></i>
                         <span>14%</span>
@@ -803,14 +803,33 @@ if ($stats['total_delivered'] > 0 && $months_with_data > 0) {
         </section>
         <style>
         .metric-value-money {
+            white-space: normal;
+            line-height: 1.1;
+            font-size: clamp(1.3rem, 1.45vw, 1.7rem);
+            letter-spacing: 0;
+            max-width: 100%;
+        }
+
+        .metric-value-money .money-currency {
             white-space: nowrap;
-            font-size: 30px;
-            letter-spacing: 0.2px;
+            display: inline-block;
+        }
+
+        .metric-value-money .money-amount {
+            white-space: nowrap;
+            display: inline-block;
+            max-width: 100%;
         }
 
         @media (max-width: 768px) {
             .metric-value-money {
-                font-size: 22px;
+                white-space: normal;
+                font-size: clamp(1.1rem, 4.6vw, 1.35rem);
+            }
+
+            .metric-value-money .money-currency,
+            .metric-value-money .money-amount {
+                white-space: normal;
             }
         }
 

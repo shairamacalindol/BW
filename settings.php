@@ -780,37 +780,6 @@ if (empty($_SESSION['user_id'])) {
                 </div>
             </div>
 
-            <!-- System Settings -->
-            <div class="settings-section">
-                <div class="settings-title">
-                    <i class="fas fa-sliders-h"></i> System
-                </div>
-
-                <div class="settings-item">
-                    <div class="settings-label">
-                        <div class="settings-label-text">Version</div>
-                        <div class="settings-label-desc">Current application version</div>
-                    </div>
-                    <div style="color: #f4d03f; font-weight: 600;">v2.1.5</div>
-                </div>
-
-                <div class="settings-item">
-                    <div class="settings-label">
-                        <div class="settings-label-text">Cache</div>
-                        <div class="settings-label-desc">Clear cached data to improve performance</div>
-                    </div>
-                    <button class="btn-save" style="background: rgba(255, 180, 0, 0.2); color: #ffd60a; border: 1px solid #ffd60a;">Clear Cache</button>
-                </div>
-
-                <div class="settings-item">
-                    <div class="settings-label">
-                        <div class="settings-label-text">Database Backup</div>
-                        <div class="settings-label-desc" id="lastBackupText">Last backup: Never</div>
-                    </div>
-                    <button class="btn-save" onclick="backupDatabase()" id="backupBtn">Backup Now</button>
-                </div>
-            </div>
-
             <!-- Danger Zone -->
             <div class="settings-section">
                 <div class="settings-title" style="color: #ff6b6b;">
@@ -854,7 +823,6 @@ if (empty($_SESSION['user_id'])) {
         // Load settings on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadSettings();
-            loadLastBackupTime();
         });
 
         // Load settings from server
@@ -869,29 +837,6 @@ if (empty($_SESSION['user_id'])) {
                 }
             } catch (error) {
                 console.error('Failed to load settings:', error);
-            }
-        }
-
-        // Load last backup time
-        async function loadLastBackupTime() {
-            try {
-                const response = await fetch('api/get-last-backup.php');
-                const data = await response.json();
-                
-                if (data.success && data.lastBackup) {
-                    const lastBackupText = document.getElementById('lastBackupText');
-                    if (lastBackupText) {
-                        lastBackupText.textContent = 'Last backup: ' + data.lastBackup;
-                    }
-                } else {
-                    // Fallback to default text if no backup found
-                    const lastBackupText = document.getElementById('lastBackupText');
-                    if (lastBackupText) {
-                        lastBackupText.textContent = 'Last backup: Never';
-                    }
-                }
-            } catch (error) {
-                console.error('Failed to load last backup time:', error);
             }
         }
 
@@ -1109,61 +1054,6 @@ if (empty($_SESSION['user_id'])) {
             document.body.classList.remove('font-small', 'font-medium', 'font-large');
             document.body.classList.add('font-' + size);
             localStorage.setItem('fontSize', size);
-        }
-
-        // ============================================
-        // DATABASE BACKUP FUNCTION
-        // ============================================
-
-        async function backupDatabase() {
-            const backupBtn = document.getElementById('backupBtn');
-            const originalText = backupBtn.textContent;
-            
-            try {
-                // Disable button and show loading state
-                backupBtn.disabled = true;
-                backupBtn.textContent = 'Creating backup...';
-                backupBtn.style.opacity = '0.6';
-
-                const response = await fetch('api/backup.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    // Update last backup timestamp
-                    const lastBackupText = document.getElementById('lastBackupText');
-                    if (lastBackupText) {
-                        lastBackupText.textContent = 'Last backup: ' + data.timestamp;
-                    }
-                    
-                    showToast('✓ Backup created successfully! Size: ' + formatFileSize(data.size), 'success');
-                    console.log('Backup file:', data.filename);
-                } else {
-                    showToast('✗ Backup failed: ' + data.message, 'error');
-                }
-            } catch (error) {
-                console.error('Backup error:', error);
-                showToast('✗ Backup error: ' + error.message, 'error');
-            } finally {
-                // Re-enable button
-                backupBtn.disabled = false;
-                backupBtn.textContent = originalText;
-                backupBtn.style.opacity = '1';
-            }
-        }
-
-        // Format file size for display
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
         }
 
         // Show toast notification

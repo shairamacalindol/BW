@@ -3,20 +3,50 @@
 // JavaScript for Interactivity & Charts
 // ============================================
 
+function getThemeMode() {
+    var theme = (localStorage.getItem('theme') || '').toLowerCase().trim();
+    var darkMode = (localStorage.getItem('darkMode') || '').toLowerCase().trim();
+
+    if (theme === 'dark' || theme === 'dark-mode' || theme === 'true' || theme === '1') {
+        return 'dark';
+    }
+    if (theme === 'light' || theme === 'light-mode' || theme === 'false' || theme === '0') {
+        return 'light';
+    }
+    if (darkMode === 'true' || darkMode === '1') {
+        return 'dark';
+    }
+    if (darkMode === 'false' || darkMode === '0') {
+        return 'light';
+    }
+
+    return 'light';
+}
+
+function isLightThemeMode() {
+    return getThemeMode() !== 'dark';
+}
+
+function applyThemeClasses(isLight) {
+    document.documentElement.classList.toggle('light-mode', isLight);
+    if (document.body) {
+        document.body.classList.toggle('light-mode', isLight);
+    }
+}
+
+function persistThemeMode(mode) {
+    localStorage.setItem('theme', mode);
+    localStorage.setItem('darkMode', mode === 'dark' ? 'true' : 'false');
+}
+
 // Apply saved theme immediately (before DOMContentLoaded to avoid flash)
 (function () {
-    var theme = localStorage.getItem('theme');
-    var isLight = theme !== 'dark'; // Default to light mode
-    if (isLight) {
-        document.documentElement.classList.add('light-mode');
-        // Apply to body as soon as it exists
-        if (document.body) {
-            document.body.classList.add('light-mode');
-        } else {
-            document.addEventListener('DOMContentLoaded', function() {
-                document.body.classList.add('light-mode');
-            });
-        }
+    var isLight = isLightThemeMode();
+    applyThemeClasses(isLight);
+    if (!document.body) {
+        document.addEventListener('DOMContentLoaded', function() {
+            applyThemeClasses(isLightThemeMode());
+        });
     }
     
     // Apply saved accent color
@@ -41,24 +71,27 @@
 //  so all charts — including those in inline PHP scripts — inherit these defaults)
 (function () {
     if (typeof Chart === 'undefined') return;
-    var theme = localStorage.getItem('theme');
-    var isLight = theme !== 'dark'; // Default to light mode
+    var isLight = isLightThemeMode();
     Chart.defaults.color       = isLight ? '#3a3a5c' : '#e0e0e0';
     Chart.defaults.borderColor = isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.05)';
 })();
+
+const VIBRANT_COLORS = {
+    amber: '#ffb703',
+    orange: '#fb8500',
+    cyan: '#00c2ff',
+    blue: '#3a86ff',
+    green: '#06d6a0',
+    pink: '#ff4d9d',
+    violet: '#8338ec'
+};
 
 // Initialize when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Dashboard Initialized');
     
-    // Ensure theme is applied to body
-    var theme = localStorage.getItem('theme');
-    var isLight = theme !== 'dark'; // Default to light mode
-    if (isLight) {
-        document.body.classList.add('light-mode');
-    } else {
-        document.body.classList.remove('light-mode');
-    }
+    // Ensure theme is consistently applied to both html and body
+    applyThemeClasses(isLightThemeMode());
     
     // Apply display settings
     initializeDisplaySettings();
@@ -133,8 +166,7 @@ function initializeDarkModeToggle() {
     if (!toggle) return;
 
     // Sync toggle state with current theme
-    const theme = localStorage.getItem('theme');
-    const isLight = theme !== 'dark'; // Default to light mode
+    const isLight = isLightThemeMode();
     if (isLight) {
         toggle.classList.remove('active');
     } else {
@@ -145,16 +177,14 @@ function initializeDarkModeToggle() {
         const currentlyDark = !document.body.classList.contains('light-mode');
         if (currentlyDark) {
             // Switch to light
-            document.documentElement.classList.add('light-mode');
-            document.body.classList.add('light-mode');
-            localStorage.setItem('theme', 'light');
+            applyThemeClasses(true);
+            persistThemeMode('light');
             toggle.classList.remove('active');
             console.log('Switched to Light Mode');
         } else {
             // Switch to dark
-            document.documentElement.classList.remove('light-mode');
-            document.body.classList.remove('light-mode');
-            localStorage.setItem('theme', 'dark');
+            applyThemeClasses(false);
+            persistThemeMode('dark');
             toggle.classList.add('active');
             console.log('Switched to Dark Mode');
         }
@@ -555,8 +585,8 @@ function initializeSparklineCharts() {
                     labels: fullMonths.slice(0, data.length),
                     datasets: [{
                         data: data,
-                        borderColor: '#f4d03f',
-                        backgroundColor: 'rgba(244, 208, 63, 0.1)',
+                        borderColor: VIBRANT_COLORS.amber,
+                        backgroundColor: 'rgba(255, 183, 3, 0.22)',
                         borderWidth: 1.5,
                         tension: 0.4,
                         fill: true,
@@ -603,7 +633,7 @@ function initializeDeliveredChart() {
             labels: ['Delivered', 'Pending'],
             datasets: [{
                 data: [delivered, pending],
-                backgroundColor: ['#f4d03f', '#2f5fa7'],
+                backgroundColor: [VIBRANT_COLORS.amber, VIBRANT_COLORS.blue],
                 borderColor: '#13172c',
                 borderWidth: 2
             }]
@@ -646,7 +676,7 @@ function initializeSoldChart() {
             labels: ['Sold', 'Available'],
             datasets: [{
                 data: [sold, available],
-                backgroundColor: ['#51cf66', '#2f5fa7'],
+                backgroundColor: [VIBRANT_COLORS.green, VIBRANT_COLORS.violet],
                 borderColor: '#13172c',
                 borderWidth: 2
             }]
@@ -685,6 +715,21 @@ function initializeMonthlyComparisonChart() {
         });
     }
 
+    const monthlyPalette = [
+        'rgba(255, 183, 3, 0.9)',
+        'rgba(251, 133, 0, 0.9)',
+        'rgba(0, 194, 255, 0.9)',
+        'rgba(58, 134, 255, 0.9)',
+        'rgba(6, 214, 160, 0.9)',
+        'rgba(255, 77, 157, 0.9)',
+        'rgba(131, 56, 236, 0.9)',
+        'rgba(76, 201, 240, 0.9)',
+        'rgba(255, 109, 0, 0.9)',
+        'rgba(46, 196, 182, 0.9)',
+        'rgba(94, 96, 206, 0.9)',
+        'rgba(247, 37, 133, 0.9)'
+    ];
+
     new Chart(ctx, {
         type: 'bar',
         data: {
@@ -693,9 +738,10 @@ function initializeMonthlyComparisonChart() {
                 {
                     label: 'Delivered',
                     data: deliveredData,
-                    backgroundColor: '#f4d03f',
-                    borderColor: '#d4b000',
-                    borderWidth: 1
+                    backgroundColor: months.map((_, i) => monthlyPalette[i % monthlyPalette.length]),
+                    borderColor: months.map((_, i) => monthlyPalette[i % monthlyPalette.length].replace('0.9', '1')),
+                    borderWidth: 1,
+                    borderRadius: 4
                 }
             ]
         },
@@ -740,6 +786,12 @@ function initializeClientsChart() {
         data = dashboardData.top_clients.map(c => parseInt(c.total_quantity) || 0);
     }
 
+    const clientBarColors = [
+        '#00c2ff', '#3a86ff', '#8338ec', '#ff4d9d', '#ff6d00',
+        '#06d6a0', '#ffb703', '#5e60ce', '#48cae4', '#f72585',
+        '#4cc9f0', '#7b2cbf', '#2ec4b6', '#ff9f1c', '#4361ee'
+    ];
+
     if (labels.length === 0) {
         const parent = ctx.parentElement;
         ctx.style.display = 'none';
@@ -754,8 +806,8 @@ function initializeClientsChart() {
             datasets: [{
                 label: 'Units Delivered',
                 data: data,
-                backgroundColor: '#2f5fa7',
-                borderColor: '#1e3c72',
+                backgroundColor: labels.map((_, i) => clientBarColors[i % clientBarColors.length]),
+                borderColor: '#172a45',
                 borderWidth: 1
             }]
         },
@@ -808,10 +860,14 @@ function initializeTrendChart() {
                 {
                     label: 'Delivered',
                     data: deliveredData,
-                    borderColor: '#f4d03f',
-                    backgroundColor: 'rgba(244, 208, 63, 0.1)',
+                    borderColor: VIBRANT_COLORS.cyan,
+                    backgroundColor: 'rgba(0, 194, 255, 0.24)',
                     tension: 0.4,
-                    fill: true
+                    fill: true,
+                    pointBackgroundColor: VIBRANT_COLORS.orange,
+                    pointBorderColor: '#ffffff',
+                    pointRadius: 3,
+                    pointHoverRadius: 5
                 }
             ]
         },
@@ -857,6 +913,8 @@ function initializeGroupAChart() {
         data = products.map(p => parseInt(p.total) || 0);
     }
 
+    const groupAColors = ['#ffb703', '#fb8500', '#00c2ff', '#8338ec', '#06d6a0'];
+
     if (labels.length === 0) {
         const parent = ctx.parentElement;
         ctx.style.display = 'none';
@@ -872,7 +930,9 @@ function initializeGroupAChart() {
                 {
                     label: 'Quantity',
                     data: data,
-                    backgroundColor: '#f4d03f'
+                    backgroundColor: labels.map((_, i) => groupAColors[i % groupAColors.length]),
+                    borderColor: '#14213d',
+                    borderWidth: 1
                 }
             ]
         },
@@ -924,6 +984,8 @@ function initializeGroupBChart() {
         }
     }
 
+    const groupBColors = ['#3a86ff', '#ff4d9d', '#06d6a0', '#ff9f1c', '#7b2cbf'];
+
     if (labels.length === 0) {
         const parent = ctx.parentElement;
         ctx.style.display = 'none';
@@ -939,7 +1001,9 @@ function initializeGroupBChart() {
                 {
                     label: 'Quantity',
                     data: data,
-                    backgroundColor: '#51cf66'
+                    backgroundColor: labels.map((_, i) => groupBColors[i % groupBColors.length]),
+                    borderColor: '#14213d',
+                    borderWidth: 1
                 }
             ]
         },

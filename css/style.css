@@ -9,7 +9,7 @@
 #pageLoader {
     position: fixed;
     inset: 0;
-    background: #f8fafc;
+    background: #0b1220;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,7 +50,7 @@ html.light-mode #pageLoader {
 .loader-text {
     font-family: 'Poppins', sans-serif;
     font-size: 13px;
-    color: #94a3b8;
+    color: #cbd5e1;
     letter-spacing: 0.5px;
 }
 
@@ -61,21 +61,21 @@ html.light-mode #pageLoader {
 }
 
 :root {
-    --color-dark-bg: #f8fafc;
-    --color-dark-secondary: #ffffff;
-    --color-sidebar: #f1f5f9;
+    --color-dark-bg: #0f172a;
+    --color-dark-secondary: #111827;
+    --color-sidebar: #111b2d;
     --color-primary: #5f5ff0;
     --color-primary-light: #7c7fef;
-    --color-accent: #ff2e7e;
-    --color-accent-light: #ff5fa8;
+    --color-accent: #f4d03f;
+    --color-accent-light: #ffe07a;
     --color-success: #00d084;
     --color-success-light: #2fffc2;
     --color-warning: #ffa500;
     --color-danger: #ff3860;
     --color-info: #0db5ff;
-    --color-text-light: #1a202c;
-    --color-text-lighter: #60687a;
-    --color-border: #c2d0e2;
+    --color-text-light: #e2e8f0;
+    --color-text-lighter: #94a3b8;
+    --color-border: #2a3a52;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -604,8 +604,8 @@ html, body {
     left: 0;
     right: 0;
     height: 70px;
-    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #e8f0ff 100%);
-    box-shadow: 0 4px 20px rgba(95, 95, 240, 0.15);
+    background: linear-gradient(135deg, #0f1a2d 0%, #142238 50%, #182b45 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     z-index: 1000;
 }
 
@@ -1628,10 +1628,13 @@ html.light-mode .btn-industrial.secondary {
     border: 1px solid var(--color-border);
     border-radius: 12px;
     padding: 20px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 50px minmax(0, 1fr) 72px;
     align-items: center;
-    gap: 15px;
+    column-gap: 15px;
+    row-gap: 8px;
     position: relative;
+    min-height: 140px;
 }
 
 .metric-icon {
@@ -1644,9 +1647,12 @@ html.light-mode .btn-industrial.secondary {
     justify-content: center;
     font-size: 24px;
     color: var(--color-accent);
+    grid-column: 1;
 }
 
 .metric-info {
+    min-width: 0;
+    grid-column: 2;
     flex: 1;
 }
 
@@ -1656,6 +1662,7 @@ html.light-mode .btn-industrial.secondary {
     color: var(--color-text-lighter);
     text-transform: uppercase;
     margin-bottom: 5px;
+    white-space: nowrap;
 }
 
 .metric-value {
@@ -1664,6 +1671,9 @@ html.light-mode .btn-industrial.secondary {
     font-weight: 700;
     color: var(--color-text-light);
     margin-bottom: 5px;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow-wrap: normal;
 }
 
 .metric-trend {
@@ -1686,12 +1696,26 @@ html.light-mode .btn-industrial.secondary {
 }
 
 .sparkline-chart {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 80px !important;
-    height: 40px !important;
+    position: static;
+    right: auto;
+    top: auto;
+    transform: none;
+    width: 72px !important;
+    height: 44px !important;
+    grid-column: 3;
+    justify-self: end;
+    align-self: center;
+}
+
+@media (max-width: 1200px) {
+    .metric-card {
+        grid-template-columns: 50px minmax(0, 1fr);
+    }
+
+    .sparkline-chart {
+        grid-column: 1 / -1;
+        justify-self: end;
+    }
 }
 
 /* Clickable Insight Toggle */

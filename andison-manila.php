@@ -93,14 +93,14 @@ $totalSold = count(array_filter($delivery_records, function($r) {
         .page-title {
             font-size: 28px;
             font-weight: 700;
-            color: #333333;
+            color: #e2e8f0;
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
         .page-title i {
-            color: #0066cc;
+            color: #f4d03f;
             font-size: 32px;
         }
 
@@ -122,13 +122,13 @@ $totalSold = count(array_filter($delivery_records, function($r) {
         .stat-value {
             font-size: 32px;
             font-weight: 700;
-            color: #0066cc;
+            color: #3a86ff;
             margin: 10px 0;
         }
 
         .stat-label {
             font-size: 12px;
-            color: #999;
+            color: #94a3b8;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -136,43 +136,44 @@ $totalSold = count(array_filter($delivery_records, function($r) {
         .section-title {
             font-size: 20px;
             font-weight: 600;
-            color: #333333;
+            color: #e2e8f0;
             margin: 30px 0 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #0066cc;
+            border-bottom: 2px solid #3a86ff;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
         .section-title i {
-            color: #0066cc;
+            color: #3a86ff;
         }
 
         .table-responsive {
-            background: #ffffff;
+            background: linear-gradient(135deg, #1e2a38 0%, #2a3f5f 100%);
             padding: 25px;
             border-radius: 12px;
             overflow-x: auto;
             width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         table {
             width: 100%;
             min-width: 1800px;
             border-collapse: collapse;
-            background: #ffffff;
+            background: #1b2838;
         }
 
         thead {
-            background: #eeeeee;
-            border-bottom: 2px solid #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         th {
             padding: 16px;
             text-align: left;
-            color: #333333;
+            color: #dbe7f5;
             font-weight: 700;
             font-size: 13px;
             text-transform: uppercase;
@@ -181,13 +182,13 @@ $totalSold = count(array_filter($delivery_records, function($r) {
 
         td {
             padding: 16px;
-            border-bottom: 1px solid #ffffff;
-            color: #333333;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: #d4deea;
             font-size: 14px;
         }
 
         tbody tr:hover {
-            background: #f9f9f9;
+            background: rgba(58, 134, 255, 0.12);
         }
 
         /* Column-specific widths */
@@ -210,7 +211,7 @@ $totalSold = count(array_filter($delivery_records, function($r) {
         th:nth-child(17), td:nth-child(17) { min-width: 80px; text-align: center; } /* Action */
 
         .item-code {
-            color: #0066cc;
+            color: #60a5fa;
             font-weight: 600;
             font-family: 'Courier New', monospace;
         }
@@ -222,7 +223,7 @@ $totalSold = count(array_filter($delivery_records, function($r) {
         }
 
         .date-cell {
-            color: #666666;
+            color: #9fb3c8;
             font-size: 13px;
         }
 
@@ -239,7 +240,7 @@ $totalSold = count(array_filter($delivery_records, function($r) {
         .no-data {
             text-align: center;
             padding: 40px 20px;
-            color: #666666;
+            color: #9fb3c8;
         }
 
         .no-data i {
@@ -354,9 +355,9 @@ $totalSold = count(array_filter($delivery_records, function($r) {
             width: 100%;
             padding: 11px 42px 11px 14px;
             border-radius: 8px;
-            border: 1px solid rgba(0,0,0,0.12);
-            background: #fff;
-            color: #222;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.08);
+            color: #e2e8f0;
             font-family: 'Poppins', sans-serif;
             font-size: 14px;
             box-sizing: border-box;
@@ -364,43 +365,85 @@ $totalSold = count(array_filter($delivery_records, function($r) {
         }
         .search-box input:focus {
             outline: none;
-            border-color: #0066cc;
+            border-color: #3a86ff;
         }
         .search-box i {
             position: absolute;
             right: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #aaa;
+            color: #94a3b8;
             pointer-events: none;
         }
         .search-count {
             font-size: 13px;
-            color: #666;
+            color: #9fb3c8;
             white-space: nowrap;
         }
 
         /* Filter tabs */
         .filter-tab {
             padding: 8px 20px;
-            border: 1px solid rgba(0,0,0,0.12);
+            border: 1px solid rgba(255,255,255,0.14);
             border-radius: 8px;
-            background: #f5f5f5;
-            color: #555;
+            background: rgba(255,255,255,0.08);
+            color: #d4deea;
             font-family: 'Poppins', sans-serif;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .filter-tab:hover { background: #e8e8e8; }
+        .filter-tab:hover { background: rgba(255,255,255,0.14); }
         .filter-tab.active {
-            background: #0066cc;
+            background: #3a86ff;
             color: #fff;
-            border-color: #0066cc;
+            border-color: #3a86ff;
         }
-        html.light-mode .filter-tab, body.light-mode .filter-tab { background: #f0f0f0; color: #333; border-color: #ccc; }
-        html.light-mode .filter-tab.active, body.light-mode .filter-tab.active { background: #0066cc; color: #fff; border-color: #0066cc; }
+
+        html.light-mode .page-title,
+        body.light-mode .page-title { color: #1f2b3a; }
+        html.light-mode .page-title i,
+        body.light-mode .page-title i { color: #1565c0; }
+        html.light-mode .section-title,
+        body.light-mode .section-title { color: #1f2b3a; border-bottom-color: #1565c0; }
+        html.light-mode .section-title i,
+        body.light-mode .section-title i { color: #1565c0; }
+
+        html.light-mode .table-responsive,
+        body.light-mode .table-responsive {
+            background: #ffffff;
+            border: 1px solid #dbe3ef;
+        }
+        html.light-mode table,
+        body.light-mode table { background: #ffffff; }
+        html.light-mode thead,
+        body.light-mode thead {
+            background: #f1f5f9;
+            border-bottom-color: #e2e8f0;
+        }
+        html.light-mode th,
+        body.light-mode th { color: #1f2b3a; }
+        html.light-mode td,
+        body.light-mode td {
+            color: #334155;
+            border-bottom-color: #edf2f7;
+        }
+        html.light-mode tbody tr:hover,
+        body.light-mode tbody tr:hover { background: #f8fbff; }
+        html.light-mode .item-code,
+        body.light-mode .item-code { color: #1565c0; }
+        html.light-mode .date-cell,
+        body.light-mode .date-cell { color: #64748b; }
+        html.light-mode .search-count,
+        body.light-mode .search-count { color: #64748b; }
+        html.light-mode .no-data,
+        body.light-mode .no-data { color: #64748b; }
+
+        html.light-mode .filter-tab,
+        body.light-mode .filter-tab { background: #f0f0f0; color: #333; border-color: #ccc; }
+        html.light-mode .filter-tab.active,
+        body.light-mode .filter-tab.active { background: #0066cc; color: #fff; border-color: #0066cc; }
         html.light-mode .search-box input,
         body.light-mode .search-box input { background: #fff; color: #222; border-color: #ccc; }
 
@@ -741,19 +784,19 @@ $totalSold = count(array_filter($delivery_records, function($r) {
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Total Transferred</div>
-                        <div class="stat-value"><?php echo $totalDeliveries; ?></div>
+                        <div class="stat-value" id="statTotalTransferred"><?php echo $totalDeliveries; ?></div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Units</div>
-                        <div class="stat-value"><?php echo number_format($totalQuantity); ?></div>
+                        <div class="stat-value" id="statTotalUnits"><?php echo number_format($totalQuantity); ?></div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Item Types</div>
-                        <div class="stat-value"><?php echo $totalItemTypes; ?></div>
+                        <div class="stat-value" id="statItemTypes"><?php echo $totalItemTypes; ?></div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Sold</div>
-                        <div class="stat-value" style="color:#2ecc71;"><?php echo $totalSold; ?></div>
+                        <div class="stat-value" id="statTotalSold" style="color:#2ecc71;"><?php echo $totalSold; ?></div>
                     </div>
                 </div>
 
@@ -1205,7 +1248,166 @@ $totalSold = count(array_filter($delivery_records, function($r) {
     <script src="js/app.js" defer></script>
     <script>
         // Records data from PHP for modals
-        const recordsData = <?php echo json_encode($delivery_records); ?>;
+        let recordsData = <?php echo json_encode($delivery_records); ?>;
+
+        function formatNumber(n) {
+            return Number(n || 0).toLocaleString();
+        }
+
+        function updateSummaryStats() {
+            const totalTransferred = recordsData.length;
+            const totalUnits = recordsData.reduce((sum, r) => sum + (parseInt(r.quantity, 10) || 0), 0);
+            const itemTypes = new Set(
+                recordsData
+                    .map(r => (r.item_code || '').trim())
+                    .filter(v => v !== '')
+            ).size;
+            const totalSoldCount = recordsData.filter(r => {
+                const soldTo = (r.transferred_to === 'to Andison Manila')
+                    ? (r.company_name || '')
+                    : (r.sold_to || '');
+                return String(soldTo).trim() !== '';
+            }).length;
+
+            const transferredEl = document.getElementById('statTotalTransferred');
+            const unitsEl = document.getElementById('statTotalUnits');
+            const itemTypesEl = document.getElementById('statItemTypes');
+            const soldEl = document.getElementById('statTotalSold');
+
+            if (transferredEl) transferredEl.textContent = formatNumber(totalTransferred);
+            if (unitsEl) unitsEl.textContent = formatNumber(totalUnits);
+            if (itemTypesEl) itemTypesEl.textContent = formatNumber(itemTypes);
+            if (soldEl) soldEl.textContent = formatNumber(totalSoldCount);
+        }
+
+        function updateRecordsEmptyState() {
+            const tbody = document.querySelector('table tbody');
+            if (!tbody) return;
+
+            const rows = tbody.querySelectorAll('tr');
+            const hasRows = rows.length > 0;
+            const tableResponsive = document.querySelector('.table-responsive');
+            const filterTabs = document.querySelector('.filter-tabs');
+            const searchContainer = document.querySelector('.search-container');
+            const countEl = document.getElementById('searchCount');
+
+            let emptyState = document.getElementById('dynamicNoData');
+
+            if (!hasRows) {
+                if (tableResponsive) tableResponsive.style.display = 'none';
+                if (filterTabs) filterTabs.style.display = 'none';
+                if (searchContainer) searchContainer.style.display = 'none';
+                if (countEl) countEl.textContent = 'Showing 0 records';
+
+                if (!emptyState) {
+                    emptyState = document.createElement('div');
+                    emptyState.id = 'dynamicNoData';
+                    emptyState.className = 'no-data';
+                    emptyState.innerHTML = '<i class="fas fa-inbox"></i><p>No delivery records found for Andison Manila</p>';
+                    if (tableResponsive && tableResponsive.parentElement) {
+                        tableResponsive.parentElement.appendChild(emptyState);
+                    }
+                }
+            } else if (emptyState) {
+                emptyState.remove();
+                if (tableResponsive) tableResponsive.style.display = '';
+                if (filterTabs) filterTabs.style.display = '';
+                if (searchContainer) searchContainer.style.display = '';
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatShortDate(dateValue, format = 'short') {
+            if (!dateValue) return '';
+            const date = new Date(dateValue);
+            if (Number.isNaN(date.getTime())) return '';
+            if (format === 'numeric') {
+                return date.toLocaleDateString('en-US');
+            }
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function normalizeAddedRecord(resultRecord, formData, fallbackId) {
+            const record = Object.assign({}, resultRecord || {});
+            record.id = record.id || fallbackId || Date.now();
+            record.invoice_no = record.invoice_no ?? formData.invoice_no ?? '';
+            record.delivery_date = record.delivery_date ?? formData.delivery_date ?? formData.date ?? '';
+            record.delivery_month = record.delivery_month ?? formData.delivery_month ?? '';
+            record.delivery_day = record.delivery_day ?? formData.delivery_day ?? '';
+            record.delivery_year = record.delivery_year ?? formData.year ?? '';
+            record.item_code = record.item_code ?? formData.item_code ?? '';
+            record.item_name = record.item_name ?? formData.item_name ?? '';
+            record.quantity = record.quantity ?? formData.quantity ?? '';
+            record.uom = record.uom ?? formData.uom ?? '';
+            record.serial_no = record.serial_no ?? formData.serial_no ?? '';
+            record.company_name = record.company_name ?? formData.company_name ?? '';
+            record.transferred_to = record.transferred_to ?? formData.transferred_to ?? '';
+            record.sold_to = record.sold_to ?? formData.sold_to ?? '';
+            record.sold_to_month = record.sold_to_month ?? formData.sold_to_month ?? '';
+            record.sold_to_day = record.sold_to_day ?? formData.sold_to_day ?? '';
+            record.remarks = record.remarks ?? record.notes ?? formData.notes ?? '';
+            record.groupings = record.groupings ?? formData.groupings ?? '';
+            record.status = record.status ?? formData.status ?? 'Delivered';
+            return record;
+        }
+
+        function prependRecordRow(record) {
+            const tbody = document.querySelector('table tbody');
+            if (!tbody) return false;
+
+            const transferredDisplay = record.transferred_to || record.company_name || '';
+            const soldToDisplay = record.transferred_to === 'to Andison Manila'
+                ? (record.company_name || '')
+                : (record.sold_to || '');
+
+            const row = document.createElement('tr');
+            row.setAttribute('data-soldto', String(soldToDisplay).trim() !== '' ? '1' : '0');
+            row.innerHTML = `
+                <td>${escapeHtml(record.invoice_no || '')}</td>
+                <td>${escapeHtml(formatShortDate(record.delivery_date, 'numeric'))}</td>
+                <td>${escapeHtml(record.delivery_month || '')}</td>
+                <td>${escapeHtml(record.delivery_day || '')}</td>
+                <td>${escapeHtml(record.delivery_year || '')}</td>
+                <td><span class="item-code">${escapeHtml(record.item_code || '')}</span></td>
+                <td>${escapeHtml(record.item_name || '')}</td>
+                <td><span class="quantity">${escapeHtml(record.quantity || '')}</span></td>
+                <td>${escapeHtml(record.uom || '')}</td>
+                <td>${escapeHtml(record.serial_no || '')}</td>
+                <td>${escapeHtml(transferredDisplay)}</td>
+                <td>${escapeHtml(soldToDisplay)}</td>
+                <td>${escapeHtml(formatShortDate(record.delivery_date, 'short'))}</td>
+                <td>${escapeHtml(record.sold_to_month || '')}</td>
+                <td>${escapeHtml(record.sold_to_day || '')}</td>
+                <td>${escapeHtml(record.remarks || '')}</td>
+                <td>${escapeHtml(record.groupings || '')}</td>
+                <td style="text-align: center;">
+                    <div class="action-buttons">
+                        <a href="#" class="view-btn" title="View Record">View</a>
+                        <a href="#" class="edit-btn" title="Edit Record"><i class="fas fa-edit"></i></a>
+                        <a href="#" class="delete-btn" title="Delete Record"><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                </td>
+            `;
+
+            const viewBtn = row.querySelector('.view-btn');
+            const editBtn = row.querySelector('.edit-btn');
+            const deleteBtn = row.querySelector('.delete-btn');
+
+            if (viewBtn) viewBtn.addEventListener('click', (event) => openModal(event, record.id));
+            if (editBtn) editBtn.addEventListener('click', (event) => openEditModal(event, record.id));
+            if (deleteBtn) deleteBtn.addEventListener('click', (event) => deleteRecord(event, record.id, record.serial_no || ''));
+
+            tbody.insertBefore(row, tbody.firstChild);
+            return true;
+        }
 
         // Toggle sidebar on mobile
         document.getElementById('hamburgerBtn').addEventListener('click', function() {
@@ -1277,8 +1479,17 @@ $totalSold = count(array_filter($delivery_records, function($r) {
                 showLoadingOverlay(false);
                 if (result.success) {
                     showToast('Record added successfully!', 'success');
+                    const addedRecord = normalizeAddedRecord(result.record, formData, result.id);
+                    recordsData.unshift(addedRecord);
+                    const rowInserted = prependRecordRow(addedRecord);
                     closeAddModal();
-                    setTimeout(() => window.location.reload(), 1200);
+                    if (!rowInserted) {
+                        setTimeout(() => window.location.reload(), 600);
+                        return;
+                    }
+                    updateSummaryStats();
+                    updateRecordsEmptyState();
+                    searchTable();
                 } else {
                     showToast('Error: ' + (result.message || 'Failed to add record'), 'error');
                 }
@@ -1373,11 +1584,21 @@ $totalSold = count(array_filter($delivery_records, function($r) {
                 showLoadingOverlay(false);
                 if (result.success) {
                     showToast('Record deleted!', 'success');
+                    recordsData = recordsData.filter(r => parseInt(r.id, 10) !== parseInt(deleteRecordId, 10));
                     if (deleteRecordRow) {
                         deleteRecordRow.style.transition = 'all 0.3s ease';
                         deleteRecordRow.style.opacity = '0';
                         deleteRecordRow.style.transform = 'translateX(-20px)';
-                        setTimeout(() => deleteRecordRow.remove(), 300);
+                        setTimeout(() => {
+                            deleteRecordRow.remove();
+                            updateSummaryStats();
+                            searchTable();
+                            updateRecordsEmptyState();
+                        }, 300);
+                    } else {
+                        updateSummaryStats();
+                        searchTable();
+                        updateRecordsEmptyState();
                     }
                     closeDeleteModal();
                 } else {
@@ -1511,7 +1732,7 @@ $totalSold = count(array_filter($delivery_records, function($r) {
                 row.style.display = match ? '' : 'none';
                 if (match) count++;
             });
-            const total = <?php echo $totalDeliveries; ?>;
+            const total = recordsData.length;
             const countEl = document.getElementById('searchCount');
             if (countEl) {
                 const label = activeFilter === 'sales' ? 'sales records' : 'records';

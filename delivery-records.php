@@ -1244,28 +1244,28 @@ if (empty($allItems)) {
         <div class="summary-grid">
             <div class="summary-card">
                 <div class="summary-label">Total Records</div>
-                <div class="summary-value"><?php echo number_format($stats['total_records']); ?></div>
+                <div class="summary-value" id="summaryTotalRecords"><?php echo number_format($stats['total_records']); ?></div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">Total Delivered</div>
-                <div class="summary-value"><?php echo number_format($stats['total_delivered']); ?></div>
+                <div class="summary-value" id="summaryTotalDelivered"><?php echo number_format($stats['total_delivered']); ?></div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">In Transit</div>
-                <div class="summary-value"><?php echo number_format($stats['in_transit']); ?></div>
+                <div class="summary-value" id="summaryInTransit"><?php echo number_format($stats['in_transit']); ?></div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">Pending</div>
-                <div class="summary-value"><?php echo number_format($stats['pending']); ?></div>
+                <div class="summary-value" id="summaryPending"><?php echo number_format($stats['pending']); ?></div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">Total Quantity</div>
-                <div class="summary-value"><?php echo number_format($stats['total_quantity']); ?></div>
+                <div class="summary-value" id="summaryTotalQuantity"><?php echo number_format($stats['total_quantity']); ?></div>
             </div>
         </div>
 
         <p style="margin-bottom: 15px; color: #a0a0a0; font-size: 13px;">
-            Showing <span id="visibleRowCount"><?php echo min(30, count($delivery_records)); ?></span> of <?php echo number_format($stats['total_records']); ?> records (latest first)
+            Showing <span id="visibleRowCount"><?php echo min(30, count($delivery_records)); ?></span> of <span id="totalRowCount"><?php echo number_format($stats['total_records']); ?></span> records (latest first)
         </p>
 
         <!-- Search Bar -->
@@ -1835,14 +1835,16 @@ if (empty($allItems)) {
         // Loader Functions
         let recordsLoaderDotsInterval = null;
         let recordsLoaderStartTime = null;
+        let recordsLoaderMinDisplayTime = 3000;
         const LOADER_MIN_DISPLAY_TIME = 3000; // 3 seconds in milliseconds
 
-        function showRecordsLoader(message = 'LOADING') {
+        function showRecordsLoader(message = 'LOADING', minDisplayTime = LOADER_MIN_DISPLAY_TIME) {
             const loader = document.getElementById('recordsLoader');
             const loaderText = document.getElementById('recordsLoaderText');
             if (!loader || !loaderText) return;
 
             recordsLoaderStartTime = Date.now(); // Record start time
+            recordsLoaderMinDisplayTime = Math.max(0, Number(minDisplayTime) || 0);
 
             // If dotlottie web component is unavailable, force fallback truck icon.
             if (!window.customElements || !window.customElements.get('dotlottie-wc')) {
@@ -1873,7 +1875,7 @@ if (empty($allItems)) {
 
             // Calculate elapsed time and add delay if needed
             const elapsedTime = Date.now() - (recordsLoaderStartTime || Date.now());
-            const remainingTime = Math.max(0, LOADER_MIN_DISPLAY_TIME - elapsedTime);
+            const remainingTime = Math.max(0, recordsLoaderMinDisplayTime - elapsedTime);
 
             if (remainingTime > 0) {
                 setTimeout(() => {
@@ -1885,7 +1887,133 @@ if (empty($allItems)) {
         }
 
         // Store all records for modal viewing
-        const recordsData = <?php echo json_encode($delivery_records); ?>;
+        let recordsData = <?php echo json_encode($delivery_records); ?>;
+
+        function formatNumber(value) {
+            return Number(value || 0).toLocaleString();
+        }
+
+        function refreshCurrentPage(delay = 0) {
+            const doRefresh = () => {
+                const url = new URL(window.location.href);
+                url.searchParams.set('_ts', Date.now().toString());
+                window.location.replace(url.toString());
+            };
+
+            if (delay > 0) {
+                setTimeout(doRefresh, delay);
+            } else {
+                doRefresh();
+            }
+        }
+
+        function updateSummaryCards() {
+            let totalDelivered = 0;
+            let inTransit = 0;
+            let pending = 0;
+            let totalQuantity = 0;
+
+            recordsData.forEach(record => {
+                const status = String(record.status || '').toLowerCase();
+                const qty = parseInt(record.quantity, 10) || 0;
+
+                if (status.includes('deliver')) {
+                    totalDelivered++;
+                    totalQuantity += qty;
+                } else if (status.includes('transit')) {
+                    inTransit++;
+                } else if (status.includes('pending')) {
+                    pending++;
+                }
+            });
+
+            const totalRecordsEl = document.getElementById('summaryTotalRecords');
+            const deliveredEl = document.getElementById('summaryTotalDelivered');
+            const transitEl = document.getElementById('summaryInTransit');
+            const pendingEl = document.getElementById('summaryPending');
+            const totalQtyEl = document.getElementById('summaryTotalQuantity');
+            const totalRowCountEl = document.getElementById('totalRowCount');
+
+            if (totalRecordsEl) totalRecordsEl.textContent = formatNumber(recordsData.length);
+            if (deliveredEl) deliveredEl.textContent = formatNumber(totalDelivered);
+            if (transitEl) transitEl.textContent = formatNumber(inTransit);
+            if (pendingEl) pendingEl.textContent = formatNumber(pending);
+            if (totalQtyEl) totalQtyEl.textContent = formatNumber(totalQuantity);
+            if (totalRowCountEl) totalRowCountEl.textContent = formatNumber(recordsData.length);
+        }
+
+        function ensureEmptyStateRow() {
+            const tbody = document.querySelector('table tbody');
+            if (!tbody) return;
+
+            const dataRows = Array.from(tbody.querySelectorAll('tr')).filter(row => !row.querySelector('td[colspan]'));
+            const existingEmpty = tbody.querySelector('tr[data-empty-state="1"]');
+
+            if (dataRows.length === 0 && !existingEmpty) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.setAttribute('data-empty-state', '1');
+                emptyRow.innerHTML = `
+                    <td colspan="19" style="text-align: center; padding: 40px; color: #a0a0a0;">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+                        No delivery records found. <a href="upload-data.php" style="color: #f4d03f;">Upload data</a> to get started.
+                    </td>
+                `;
+                tbody.appendChild(emptyRow);
+            }
+
+            if (dataRows.length > 0 && existingEmpty) {
+                existingEmpty.remove();
+            }
+        }
+
+        function reindexRows() {
+            const rows = Array.from(document.querySelectorAll('table tbody tr')).filter(row => !row.querySelector('td[colspan]'));
+            rows.forEach((row, index) => {
+                row.setAttribute('data-row-index', index);
+            });
+        }
+
+        function balanceVisibleRows() {
+            if (searchActive) return;
+
+            const searchInput = document.getElementById('searchInput');
+            const currentFilter = (searchInput ? searchInput.value : '').trim();
+            if (currentFilter !== '') return;
+
+            const activeFilterBtn = document.querySelector('.filter-btn.active');
+            const activeFilterText = activeFilterBtn ? activeFilterBtn.textContent.trim().toLowerCase() : 'all';
+            if (activeFilterText !== 'all') return;
+
+            const dataRows = Array.from(document.querySelectorAll('table tbody tr')).filter(row => !row.querySelector('td[colspan]'));
+            const targetVisible = Math.min(currentVisibleRows, dataRows.length);
+            let currentlyVisible = dataRows.filter(row => !row.classList.contains('hidden-row') && row.style.display !== 'none').length;
+
+            if (currentlyVisible >= targetVisible) return;
+
+            dataRows.forEach(row => {
+                if (currentlyVisible >= targetVisible) return;
+                if (row.classList.contains('hidden-row')) {
+                    row.classList.remove('hidden-row');
+                    row.style.display = '';
+                    currentlyVisible++;
+                }
+            });
+        }
+
+        function updateLoadMoreState() {
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+            if (!loadMoreContainer) return;
+
+            const hiddenRows = document.querySelectorAll('table tbody tr.hidden-row').length;
+            const hiddenCountSpan = document.getElementById('hiddenCount');
+
+            if (hiddenRows > 0) {
+                loadMoreContainer.style.display = 'flex';
+                if (hiddenCountSpan) hiddenCountSpan.textContent = `(${hiddenRows} more records)`;
+            } else {
+                loadMoreContainer.innerHTML = '<p style="color: #51cf66; font-weight: 600;"><i class="fas fa-check-circle"></i> All records loaded</p>';
+            }
+        }
         
         function openModal(event, id) {
             event.preventDefault();
@@ -1958,13 +2086,13 @@ if (empty($allItems)) {
 
         function confirmDelete() {
             if (!deleteRecordId) return;
-            
+
             const confirmBtn = document.getElementById('confirmDeleteBtn');
             const originalText = confirmBtn.innerHTML;
             confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
             confirmBtn.disabled = true;
-            showRecordsLoader('DELETING');
-            
+            showRecordsLoader('DELETING', 120);
+
             fetch('api/delete-record.php', {
                 method: 'POST',
                 headers: {
@@ -1972,27 +2100,60 @@ if (empty($allItems)) {
                 },
                 body: JSON.stringify({ id: deleteRecordId })
             })
-            .then(response => response.json())
-            .then(result => {
+            .then(async response => {
+                const raw = await response.text();
+                let result = null;
+                try {
+                    result = JSON.parse(raw);
+                } catch (e) {
+                    result = null;
+                }
+
+                const bodySaysSuccess = /"success"\s*:\s*true/i.test(raw);
+                const isSuccess = Boolean(result && result.success) || bodySaysSuccess || (response.ok && raw.trim() === '');
+                return {
+                    isSuccess,
+                    message: (result && result.message) ? result.message : 'Failed to delete record',
+                    raw
+                };
+            })
+            .then(payload => {
                 hideRecordsLoader();
                 confirmBtn.innerHTML = originalText;
                 confirmBtn.disabled = false;
-                
-                if (result.success) {
+
+                if (payload.isSuccess) {
                     showToast('Record deleted!', 'success');
-                    // Remove the row from table with animation
+                    recordsData = recordsData.filter(r => parseInt(r.id, 10) !== parseInt(deleteRecordId, 10));
+
                     if (deleteRecordRow) {
                         deleteRecordRow.style.transition = 'all 0.3s ease';
                         deleteRecordRow.style.opacity = '0';
                         deleteRecordRow.style.transform = 'translateX(-20px)';
                         setTimeout(() => {
                             deleteRecordRow.remove();
+                            reindexRows();
+                            balanceVisibleRows();
+                            updateSummaryCards();
+                            ensureEmptyStateRow();
+                            updateVisibleCount();
                             updateSearchCount();
+                            updateLoadMoreState();
                         }, 300);
+                    } else {
+                        reindexRows();
+                        balanceVisibleRows();
+                        updateSummaryCards();
+                        ensureEmptyStateRow();
+                        updateVisibleCount();
+                        updateSearchCount();
+                        updateLoadMoreState();
                     }
+
                     closeDeleteModal();
+                    refreshCurrentPage(60);
                 } else {
-                    showToast('Error: ' + (result.message || 'Failed to delete record'), 'error');
+                    showToast('Error: ' + payload.message, 'error');
                 }
             })
             .catch(error => {
@@ -2084,8 +2245,12 @@ if (empty($allItems)) {
                     closeAddModal();
                     
                     // Add new record to the table at the top
-                    if (result.record) {
-                        const newRecord = result.record;
+                    {
+                        const newRecord = Object.assign({}, formData, result.record || {});
+                        newRecord.id = newRecord.id || result.id || Date.now();
+                        if (!newRecord.delivery_year && newRecord.year) {
+                            newRecord.delivery_year = newRecord.year;
+                        }
                         recordsData.unshift(newRecord); // Add to beginning of array
                         
                         // Format dates for display
@@ -2134,6 +2299,11 @@ if (empty($allItems)) {
                         // Insert at top of table
                         const tableBody = document.querySelector('table tbody');
                         if (tableBody) {
+                            const emptyStateRow = tableBody.querySelector('tr[data-empty-state="1"], tr td[colspan]');
+                            if (emptyStateRow) {
+                                emptyStateRow.closest('tr')?.remove();
+                            }
+
                             tableBody.insertBefore(newRow, tableBody.firstChild);
                             
                             // Update load more logic: if we had 30 rows showing, the 31st becomes hidden now
@@ -2149,10 +2319,14 @@ if (empty($allItems)) {
                             }
                             
                             // Update visible count
+                            updateSummaryCards();
+                            ensureEmptyStateRow();
                             updateVisibleCount();
                             updateSearchCount();
+                            updateLoadMoreState();
                         }
                     }
+                    setTimeout(() => window.location.reload(), 500);
                 } else {
                     showToast('Error: ' + (result.message || 'Failed to add record'), 'error');
                 }
@@ -2436,14 +2610,19 @@ if (empty($allItems)) {
 
         function updateSearchCount(count, filter) {
             const searchCount = document.getElementById('searchCount');
-            const totalRows = document.querySelectorAll('table tbody tr:not([style*=\"display: none\"])').length;
+            const rows = Array.from(document.querySelectorAll('table tbody tr')).filter(row => !row.querySelector('td[colspan]'));
+            const visibleRows = rows.filter(row => row.style.display !== 'none').length;
+            const activeCount = typeof count === 'number' ? count : visibleRows;
+            const query = typeof filter === 'string' ? filter : (document.getElementById('searchInput')?.value || '').trim();
             
-            if (filter && filter !== '') {
-                searchCount.innerHTML = `<i class="fas fa-filter"></i> Found <strong>${count}</strong> matching records`;
+            if (!searchCount) return;
+
+            if (query !== '') {
+                searchCount.innerHTML = `<i class="fas fa-filter"></i> Found <strong>${activeCount}</strong> matching records`;
                 searchCount.style.background = 'rgba(47, 95, 167, 0.2)';
                 searchCount.style.color = '#6ba3eb';
             } else {
-                searchCount.innerHTML = 'Showing all records';
+                searchCount.innerHTML = `Showing ${formatNumber(activeCount)} records`;
                 searchCount.style.background = 'rgba(255, 255, 255, 0.05)';
                 searchCount.style.color = '#a0a0a0';
             }
@@ -2452,12 +2631,17 @@ if (empty($allItems)) {
         // Load More functionality
         let currentVisibleRows = 30;
         const rowsPerLoad = 30;
-        const totalRecords = <?php echo count($delivery_records); ?>;
+        let totalRecords = recordsData.length;
         
         function updateVisibleCount() {
             const visibleCountEl = document.getElementById('visibleRowCount');
+            const totalRowCountEl = document.getElementById('totalRowCount');
+            totalRecords = recordsData.length;
             if (visibleCountEl) {
                 visibleCountEl.textContent = Math.min(currentVisibleRows, totalRecords);
+            }
+            if (totalRowCountEl) {
+                totalRowCountEl.textContent = formatNumber(totalRecords);
             }
         }
         

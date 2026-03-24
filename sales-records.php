@@ -548,13 +548,15 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
 
         .summary-cards {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 20px;
             margin-bottom: 30px;
             width: 100%;
+            align-items: stretch;
+            grid-auto-rows: 1fr;
         }
 
-        .summary-card {
+        .summary-cards .summary-card {
             background: linear-gradient(135deg, #1e2a38 0%, #2a3f5f 100%);
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -562,48 +564,60 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
             text-align: center;
             transition: all 0.3s ease;
             min-width: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 210px;
+            height: 100%;
         }
 
-        .summary-card:hover {
+        .summary-cards .summary-card:hover {
             transform: translateY(-3px);
             border-color: #f4d03f;
         }
 
-        .summary-card.highlight {
+        .summary-cards .summary-card.highlight {
             background: linear-gradient(135deg, #2f5fa7 0%, #00d9ff 100%);
         }
 
-        .summary-card .icon {
+        .summary-cards .summary-card .icon {
             font-size: 36px;
             margin-bottom: 12px;
             color: #f4d03f;
         }
 
-        .summary-card.highlight .icon {
+        .summary-cards .summary-card.highlight .icon {
             color: #fff;
         }
 
-        .summary-card .value {
+        .summary-cards .summary-card .value {
             font-size: 32px;
             font-weight: 700;
             color: #fff;
             margin-bottom: 5px;
+            max-width: 100%;
         }
 
-        .summary-card .value.money-value {
+        .summary-cards .summary-card .value.money-value {
             white-space: nowrap;
-            font-size: 28px;
+            overflow-wrap: normal;
+            word-break: normal;
+            line-height: 1.15;
+            font-size: clamp(18px, 1.2vw, 26px);
             letter-spacing: 0.2px;
         }
 
-        .summary-card .label {
+        .summary-cards .summary-card .label {
             font-size: 13px;
             color: #a0a0a0;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            max-width: 100%;
+            overflow-wrap: anywhere;
         }
 
-        .summary-card.highlight .label {
+        .summary-cards .summary-card.highlight .label {
             color: rgba(255, 255, 255, 0.8);
         }
 
@@ -888,6 +902,28 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
             color: #1e88e5;
         }
 
+        html.light-mode .summary-cards .summary-card.highlight,
+        body.light-mode .summary-cards .summary-card.highlight {
+            background: linear-gradient(135deg, #2f5fa7 0%, #00b8df 100%) !important;
+            border-color: rgba(0, 88, 128, 0.28) !important;
+            box-shadow: 0 8px 18px rgba(47, 95, 167, 0.18);
+        }
+
+        html.light-mode .summary-cards .summary-card.highlight .icon,
+        body.light-mode .summary-cards .summary-card.highlight .icon {
+            color: #ffffff !important;
+        }
+
+        html.light-mode .summary-cards .summary-card.highlight .value,
+        body.light-mode .summary-cards .summary-card.highlight .value {
+            color: #ffffff !important;
+        }
+
+        html.light-mode .summary-cards .summary-card.highlight .label,
+        body.light-mode .summary-cards .summary-card.highlight .label {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
         html.light-mode .badge-current,
         body.light-mode .badge-current {
             background: rgba(30, 136, 229, 0.15);
@@ -901,7 +937,7 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
         /* Large desktops and smaller */
         @media (max-width: 1200px) {
             .summary-cards {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(3, minmax(0, 1fr));
             }
         }
 
@@ -1048,9 +1084,10 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
                 margin-bottom: 2px;
             }
 
-            .summary-card .value.money-value {
+            .summary-cards .summary-card .value.money-value {
                 font-size: 18px;
                 white-space: nowrap;
+                overflow-wrap: normal;
             }
             
             .summary-card .label {
@@ -1319,21 +1356,6 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
 
             <!-- Summary Cards -->
             <div class="summary-cards">
-                <div class="summary-card">
-                    <div class="icon"><i class="fas fa-calendar-check"></i></div>
-                    <div class="value" id="statYearlyUnits"><?php echo number_format($yearlyTotal['units']); ?></div>
-                    <div class="label" id="labelUnitsYear">Units in <?php echo $selectedYear; ?></div>
-                </div>
-                <div class="summary-card">
-                    <div class="icon"><i class="fas fa-clipboard-list"></i></div>
-                    <div class="value" id="statYearlyOrders"><?php echo number_format($yearlyTotal['orders']); ?></div>
-                    <div class="label" id="labelOrdersYear">Orders in <?php echo $selectedYear; ?></div>
-                </div>
-                <div class="summary-card">
-                    <div class="icon"><i class="fas fa-peso-sign"></i></div>
-                    <div class="value money-value" id="statYearlySales">PHP <?php echo number_format($yearlyTotal['sales'], 2); ?></div>
-                    <div class="label">Sales Amount in <?php echo $selectedYear; ?></div>
-                </div>
                 <div class="summary-card highlight">
                     <div class="icon"><i class="fas fa-boxes"></i></div>
                     <div class="value"><?php echo number_format($allTimeTotal['units']); ?></div>
@@ -1348,6 +1370,21 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
                     <div class="icon"><i class="fas fa-sack-dollar"></i></div>
                     <div class="value money-value">PHP <?php echo number_format($allTimeTotal['sales'], 2); ?></div>
                     <div class="label">All-Time Sales Amount</div>
+                </div>
+                <div class="summary-card">
+                    <div class="icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="value" id="statYearlyUnits"><?php echo number_format($yearlyTotal['units']); ?></div>
+                    <div class="label" id="labelUnitsYear">Units in <?php echo $selectedYear; ?></div>
+                </div>
+                <div class="summary-card">
+                    <div class="icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="value" id="statYearlyOrders"><?php echo number_format($yearlyTotal['orders']); ?></div>
+                    <div class="label" id="labelOrdersYear">Orders in <?php echo $selectedYear; ?></div>
+                </div>
+                <div class="summary-card">
+                    <div class="icon"><i class="fas fa-peso-sign"></i></div>
+                    <div class="value money-value" id="statYearlySales">PHP <?php echo number_format($yearlyTotal['sales'], 2); ?></div>
+                    <div class="label">Sales Amount in <?php echo $selectedYear; ?></div>
                 </div>
             </div>
 
@@ -1498,13 +1535,17 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
         // Chart colors
         const isDarkMode = !document.body.classList.contains('light-mode');
         const chartColors = {
-            primary: '#f4d03f',
-            secondary: '#2f5fa7',
-            success: '#2ecc71',
-            info: '#00d9ff',
+            primary: '#ffb703',
+            secondary: '#3a86ff',
+            success: '#06d6a0',
+            info: '#00c2ff',
+            accent: '#fb8500',
+            violet: '#8338ec',
             gridColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
             textColor: isDarkMode ? '#e0e0e0' : '#333'
         };
+
+        const monthBarPalette = ['#ffb703', '#fb8500', '#00c2ff', '#3a86ff', '#06d6a0', '#ff4d9d', '#8338ec', '#4cc9f0', '#ff6d00', '#2ec4b6', '#5e60ce', '#f72585'];
 
         // Monthly Units Chart
         const monthlyUnitsCtx = document.getElementById('monthlyUnitsChart').getContext('2d');
@@ -1515,9 +1556,9 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
                 datasets: [{
                     label: 'Units Delivered',
                     data: <?php echo $monthUnits; ?>,
-                    backgroundColor: 'rgba(244, 208, 63, 0.7)',
-                    borderColor: '#f4d03f',
-                    borderWidth: 2,
+                    backgroundColor: monthBarPalette,
+                    borderColor: '#10233f',
+                    borderWidth: 1,
                     borderRadius: 6
                 }]
             },
@@ -1550,13 +1591,15 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
                 datasets: [{
                     label: 'Orders',
                     data: <?php echo $monthOrders; ?>,
-                    borderColor: '#00d9ff',
-                    backgroundColor: 'rgba(0, 217, 255, 0.1)',
+                    borderColor: chartColors.info,
+                    backgroundColor: 'rgba(0, 194, 255, 0.24)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#00d9ff',
-                    pointRadius: 5
+                    pointBackgroundColor: chartColors.accent,
+                    pointBorderColor: '#ffffff',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
                 }]
             },
             options: {
@@ -1588,15 +1631,15 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
                 datasets: [{
                     label: 'Units',
                     data: <?php echo $yearUnits; ?>,
-                    backgroundColor: 'rgba(47, 95, 167, 0.8)',
-                    borderColor: '#2f5fa7',
+                    backgroundColor: 'rgba(58, 134, 255, 0.9)',
+                    borderColor: chartColors.secondary,
                     borderWidth: 2,
                     borderRadius: 6
                 }, {
                     label: 'Orders',
                     data: <?php echo $yearOrders; ?>,
-                    backgroundColor: 'rgba(46, 204, 113, 0.8)',
-                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(6, 214, 160, 0.9)',
+                    borderColor: chartColors.success,
                     borderWidth: 2,
                     borderRadius: 6
                 }]

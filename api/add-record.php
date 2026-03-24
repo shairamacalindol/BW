@@ -25,6 +25,8 @@ try {
     $uom = trim($data['uom'] ?? '');
     $serial_no = trim($data['serial_no'] ?? '');
     $company_name = trim($data['company_name'] ?? '');
+    $transferred_to = trim($data['transferred_to'] ?? '');
+    $sold_to = trim($data['sold_to'] ?? '');
     $delivery_date = !empty($data['delivery_date']) ? $data['delivery_date'] : null;
     $sold_to_month = trim($data['sold_to_month'] ?? '');
     $sold_to_day = !empty($data['sold_to_day']) ? intval($data['sold_to_day']) : null;
@@ -66,8 +68,8 @@ try {
     
     // Insert into database
     $sql = "INSERT INTO delivery_records 
-            (invoice_no, serial_no, delivery_month, delivery_day, delivery_year, delivery_date, item_code, item_name, company_name, quantity, unit_price, status, notes, uom, sold_to_month, sold_to_day, groupings, dataset_name)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            (invoice_no, serial_no, delivery_month, delivery_day, delivery_year, delivery_date, item_code, item_name, company_name, transferred_to, sold_to, quantity, unit_price, status, notes, uom, sold_to_month, sold_to_day, groupings, dataset_name)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
@@ -75,7 +77,7 @@ try {
     }
 
     $stmt->bind_param(
-        'sssiissssidssssiss',
+        'sssiissssssidssssiss',
         $invoice_no,
         $serial_no,
         $delivery_month,
@@ -85,6 +87,8 @@ try {
         $item_code,
         $item_name,
         $company_name,
+        $transferred_to,
+        $sold_to,
         $quantity,
         $unit_price,
         $status,

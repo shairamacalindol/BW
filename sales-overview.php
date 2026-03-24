@@ -121,6 +121,8 @@ $topQtys     = json_encode(array_column($top_products, 'total_qty'));
             text-align: center;
             transition: all 0.3s ease;
             min-width: 0;
+            display: block;
+            overflow: hidden;
         }
         .summary-card:hover {
             transform: translateY(-3px);
@@ -140,7 +142,9 @@ $topQtys     = json_encode(array_column($top_products, 'total_qty'));
             font-weight: 700;
             color: #fff;
             margin-bottom: 5px;
-            word-break: break-word;
+            white-space: nowrap;
+            line-height: 1.1;
+            font-variant-numeric: tabular-nums;
         }
         .summary-card .label {
             font-size: clamp(10px, 1.2vw, 13px);
@@ -486,6 +490,7 @@ $topQtys     = json_encode(array_column($top_products, 'total_qty'));
         const isLight = document.body.classList.contains('light-mode') || document.documentElement.classList.contains('light-mode');
         const tcol = isLight ? '#333' : '#c8d6e8';
         const gcol = isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
+        const vibrantPalette = ['#ffb703', '#fb8500', '#00c2ff', '#3a86ff', '#06d6a0', '#ff4d9d', '#8338ec', '#4cc9f0', '#ff6d00', '#2ec4b6'];
 
         // Monthly bar chart
         (function() {
@@ -498,7 +503,9 @@ $topQtys     = json_encode(array_column($top_products, 'total_qty'));
                     datasets: [{
                         label: 'Units',
                         data: monthUnits,
-                        backgroundColor: '#f4d03f',
+                        backgroundColor: monthLabels.map(function(_, i) { return vibrantPalette[i % vibrantPalette.length]; }),
+                        borderColor: '#10233f',
+                        borderWidth: 1,
                         borderRadius: 4,
                         barPercentage: 0.7
                     }]
@@ -531,7 +538,7 @@ $topQtys     = json_encode(array_column($top_products, 'total_qty'));
                     labels: shortLabels,
                     datasets: [{
                         data: topQtys,
-                        backgroundColor: ['#2f5fa7','#f4d03f','#51cf66','#ff6b6b','#00d9ff'],
+                        backgroundColor: topQtys.map(function(_, i) { return vibrantPalette[i % vibrantPalette.length]; }),
                         borderColor: '#1e2a38',
                         borderWidth: 2
                     }]

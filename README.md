@@ -525,7 +525,7 @@ h1, h2, h3 {
    - Loading states
    - Animation preferences
 
----
+---   
 
 ## 📝 Code Quality
 

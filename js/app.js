@@ -634,7 +634,7 @@ function initializeDeliveredChart() {
             datasets: [{
                 data: [delivered, pending],
                 backgroundColor: [VIBRANT_COLORS.amber, VIBRANT_COLORS.blue],
-                borderColor: '#13172c',
+                borderColor: '#ffffff',
                 borderWidth: 2
             }]
         },
@@ -677,7 +677,7 @@ function initializeSoldChart() {
             datasets: [{
                 data: [sold, available],
                 backgroundColor: [VIBRANT_COLORS.green, VIBRANT_COLORS.violet],
-                borderColor: '#13172c',
+                borderColor: '#ffffff',
                 borderWidth: 2
             }]
         },
@@ -807,7 +807,7 @@ function initializeClientsChart() {
                 label: 'Units Delivered',
                 data: data,
                 backgroundColor: labels.map((_, i) => clientBarColors[i % clientBarColors.length]),
-                borderColor: '#172a45',
+                borderColor: '#ffffff',
                 borderWidth: 1
             }]
         },
@@ -931,7 +931,7 @@ function initializeGroupAChart() {
                     label: 'Quantity',
                     data: data,
                     backgroundColor: labels.map((_, i) => groupAColors[i % groupAColors.length]),
-                    borderColor: '#14213d',
+                    borderColor: '#ffffff',
                     borderWidth: 1
                 }
             ]
@@ -1002,7 +1002,7 @@ function initializeGroupBChart() {
                     label: 'Quantity',
                     data: data,
                     backgroundColor: labels.map((_, i) => groupBColors[i % groupBColors.length]),
-                    borderColor: '#14213d',
+                    borderColor: '#ffffff',
                     borderWidth: 1
                 }
             ]

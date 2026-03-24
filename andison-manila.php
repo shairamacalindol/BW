@@ -1316,99 +1316,6 @@ $totalSold = count(array_filter($delivery_records, function($r) {
             }
         }
 
-        function escapeHtml(value) {
-            return String(value ?? '')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        }
-
-        function formatShortDate(dateValue, format = 'short') {
-            if (!dateValue) return '';
-            const date = new Date(dateValue);
-            if (Number.isNaN(date.getTime())) return '';
-            if (format === 'numeric') {
-                return date.toLocaleDateString('en-US');
-            }
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-
-        function normalizeAddedRecord(resultRecord, formData, fallbackId) {
-            const record = Object.assign({}, resultRecord || {});
-            record.id = record.id || fallbackId || Date.now();
-            record.invoice_no = record.invoice_no ?? formData.invoice_no ?? '';
-            record.delivery_date = record.delivery_date ?? formData.delivery_date ?? formData.date ?? '';
-            record.delivery_month = record.delivery_month ?? formData.delivery_month ?? '';
-            record.delivery_day = record.delivery_day ?? formData.delivery_day ?? '';
-            record.delivery_year = record.delivery_year ?? formData.year ?? '';
-            record.item_code = record.item_code ?? formData.item_code ?? '';
-            record.item_name = record.item_name ?? formData.item_name ?? '';
-            record.quantity = record.quantity ?? formData.quantity ?? '';
-            record.uom = record.uom ?? formData.uom ?? '';
-            record.serial_no = record.serial_no ?? formData.serial_no ?? '';
-            record.company_name = record.company_name ?? formData.company_name ?? '';
-            record.transferred_to = record.transferred_to ?? formData.transferred_to ?? '';
-            record.sold_to = record.sold_to ?? formData.sold_to ?? '';
-            record.sold_to_month = record.sold_to_month ?? formData.sold_to_month ?? '';
-            record.sold_to_day = record.sold_to_day ?? formData.sold_to_day ?? '';
-            record.remarks = record.remarks ?? record.notes ?? formData.notes ?? '';
-            record.groupings = record.groupings ?? formData.groupings ?? '';
-            record.status = record.status ?? formData.status ?? 'Delivered';
-            return record;
-        }
-
-        function prependRecordRow(record) {
-            const tbody = document.querySelector('table tbody');
-            if (!tbody) return false;
-
-            const transferredDisplay = record.transferred_to || record.company_name || '';
-            const soldToDisplay = record.transferred_to === 'to Andison Manila'
-                ? (record.company_name || '')
-                : (record.sold_to || '');
-
-            const row = document.createElement('tr');
-            row.setAttribute('data-soldto', String(soldToDisplay).trim() !== '' ? '1' : '0');
-            row.innerHTML = `
-                <td>${escapeHtml(record.invoice_no || '')}</td>
-                <td>${escapeHtml(formatShortDate(record.delivery_date, 'numeric'))}</td>
-                <td>${escapeHtml(record.delivery_month || '')}</td>
-                <td>${escapeHtml(record.delivery_day || '')}</td>
-                <td>${escapeHtml(record.delivery_year || '')}</td>
-                <td><span class="item-code">${escapeHtml(record.item_code || '')}</span></td>
-                <td>${escapeHtml(record.item_name || '')}</td>
-                <td><span class="quantity">${escapeHtml(record.quantity || '')}</span></td>
-                <td>${escapeHtml(record.uom || '')}</td>
-                <td>${escapeHtml(record.serial_no || '')}</td>
-                <td>${escapeHtml(transferredDisplay)}</td>
-                <td>${escapeHtml(soldToDisplay)}</td>
-                <td>${escapeHtml(formatShortDate(record.delivery_date, 'short'))}</td>
-                <td>${escapeHtml(record.sold_to_month || '')}</td>
-                <td>${escapeHtml(record.sold_to_day || '')}</td>
-                <td>${escapeHtml(record.remarks || '')}</td>
-                <td>${escapeHtml(record.groupings || '')}</td>
-                <td style="text-align: center;">
-                    <div class="action-buttons">
-                        <a href="#" class="view-btn" title="View Record">View</a>
-                        <a href="#" class="edit-btn" title="Edit Record"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="delete-btn" title="Delete Record"><i class="fas fa-trash-alt"></i></a>
-                    </div>
-                </td>
-            `;
-
-            const viewBtn = row.querySelector('.view-btn');
-            const editBtn = row.querySelector('.edit-btn');
-            const deleteBtn = row.querySelector('.delete-btn');
-
-            if (viewBtn) viewBtn.addEventListener('click', (event) => openModal(event, record.id));
-            if (editBtn) editBtn.addEventListener('click', (event) => openEditModal(event, record.id));
-            if (deleteBtn) deleteBtn.addEventListener('click', (event) => deleteRecord(event, record.id, record.serial_no || ''));
-
-            tbody.insertBefore(row, tbody.firstChild);
-            return true;
-        }
-
         // Toggle sidebar on mobile
         document.getElementById('hamburgerBtn').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
@@ -1479,17 +1386,8 @@ $totalSold = count(array_filter($delivery_records, function($r) {
                 showLoadingOverlay(false);
                 if (result.success) {
                     showToast('Record added successfully!', 'success');
-                    const addedRecord = normalizeAddedRecord(result.record, formData, result.id);
-                    recordsData.unshift(addedRecord);
-                    const rowInserted = prependRecordRow(addedRecord);
                     closeAddModal();
-                    if (!rowInserted) {
-                        setTimeout(() => window.location.reload(), 600);
-                        return;
-                    }
-                    updateSummaryStats();
-                    updateRecordsEmptyState();
-                    searchTable();
+                    setTimeout(() => window.location.reload(), 1200);
                 } else {
                     showToast('Error: ' + (result.message || 'Failed to add record'), 'error');
                 }

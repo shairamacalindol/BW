@@ -1835,16 +1835,14 @@ if (empty($allItems)) {
         // Loader Functions
         let recordsLoaderDotsInterval = null;
         let recordsLoaderStartTime = null;
-        let recordsLoaderMinDisplayTime = 3000;
         const LOADER_MIN_DISPLAY_TIME = 3000; // 3 seconds in milliseconds
 
-        function showRecordsLoader(message = 'LOADING', minDisplayTime = LOADER_MIN_DISPLAY_TIME) {
+        function showRecordsLoader(message = 'LOADING') {
             const loader = document.getElementById('recordsLoader');
             const loaderText = document.getElementById('recordsLoaderText');
             if (!loader || !loaderText) return;
 
             recordsLoaderStartTime = Date.now(); // Record start time
-            recordsLoaderMinDisplayTime = Math.max(0, Number(minDisplayTime) || 0);
 
             // If dotlottie web component is unavailable, force fallback truck icon.
             if (!window.customElements || !window.customElements.get('dotlottie-wc')) {
@@ -1875,7 +1873,7 @@ if (empty($allItems)) {
 
             // Calculate elapsed time and add delay if needed
             const elapsedTime = Date.now() - (recordsLoaderStartTime || Date.now());
-            const remainingTime = Math.max(0, recordsLoaderMinDisplayTime - elapsedTime);
+            const remainingTime = Math.max(0, LOADER_MIN_DISPLAY_TIME - elapsedTime);
 
             if (remainingTime > 0) {
                 setTimeout(() => {
@@ -2091,7 +2089,7 @@ if (empty($allItems)) {
             const originalText = confirmBtn.innerHTML;
             confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
             confirmBtn.disabled = true;
-            showRecordsLoader('DELETING', 120);
+            showRecordsLoader('DELETING');
 
             fetch('api/delete-record.php', {
                 method: 'POST',
@@ -2151,7 +2149,7 @@ if (empty($allItems)) {
                     }
 
                     closeDeleteModal();
-                    refreshCurrentPage(60);
+                    refreshCurrentPage(500);
                 } else {
                     showToast('Error: ' + payload.message, 'error');
                 }

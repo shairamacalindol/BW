@@ -1533,7 +1533,8 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
         const ALL_MONTHS = <?php echo $monthLabels; ?>;
 
         // Chart colors
-        const isDarkMode = !document.body.classList.contains('light-mode');
+        const isLightMode = document.body.classList.contains('light-mode') || document.documentElement.classList.contains('light-mode');
+        const isDarkMode = !isLightMode;
         const chartColors = {
             primary: '#ffb703',
             secondary: '#3a86ff',
@@ -1541,8 +1542,8 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
             info: '#00c2ff',
             accent: '#fb8500',
             violet: '#8338ec',
-            gridColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-            textColor: isDarkMode ? '#e0e0e0' : '#333'
+            gridColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(15, 23, 42, 0.18)',
+            textColor: isDarkMode ? '#e0e0e0' : '#1f2937'
         };
 
         const monthBarPalette = ['#ffb703', '#fb8500', '#00c2ff', '#3a86ff', '#06d6a0', '#ff4d9d', '#8338ec', '#4cc9f0', '#ff6d00', '#2ec4b6', '#5e60ce', '#f72585'];
@@ -1557,7 +1558,7 @@ $yearOrders = json_encode(array_column($yearlySales, 'orders'));
                     label: 'Units Delivered',
                     data: <?php echo $monthUnits; ?>,
                     backgroundColor: monthBarPalette,
-                    borderColor: '#10233f',
+                    borderColor: '#ffffff',
                     borderWidth: 1,
                     borderRadius: 6
                 }]

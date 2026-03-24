@@ -857,7 +857,7 @@ foreach ($topCompanies as $company) {
                 datasets: [{
                     data: groupAValues.length > 0 ? groupAValues : [1],
                     backgroundColor: ['#2f5fa7', '#00d9ff', '#34d399', '#f4d03f', '#ff6b6b', '#9b59b6'],
-                    borderColor: '#13172c',
+                    borderColor: '#ffffff',
                     borderWidth: 2
                 }]
             },
@@ -920,7 +920,7 @@ foreach ($topCompanies as $company) {
                 datasets: [{
                     data: groupBValues.length > 0 ? groupBValues : [1],
                     backgroundColor: ['#ff6b6b', '#ff9500', '#00d9ff', '#34d399', '#9b59b6', '#2f5fa7'],
-                    borderColor: '#13172c',
+                    borderColor: '#ffffff',
                     borderWidth: 2
                 }]
             },

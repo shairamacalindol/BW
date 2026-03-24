@@ -504,7 +504,7 @@ $topQtys     = json_encode(array_column($top_products, 'total_qty'));
                         label: 'Units',
                         data: monthUnits,
                         backgroundColor: monthLabels.map(function(_, i) { return vibrantPalette[i % vibrantPalette.length]; }),
-                        borderColor: '#10233f',
+                        borderColor: '#ffffff',
                         borderWidth: 1,
                         borderRadius: 4,
                         barPercentage: 0.7
@@ -539,7 +539,7 @@ $topQtys     = json_encode(array_column($top_products, 'total_qty'));
                     datasets: [{
                         data: topQtys,
                         backgroundColor: topQtys.map(function(_, i) { return vibrantPalette[i % vibrantPalette.length]; }),
-                        borderColor: '#1e2a38',
+                        borderColor: '#ffffff',
                         borderWidth: 2
                     }]
                 },
